@@ -29,11 +29,14 @@ class Pawn():
 # Gère toute la logique du jeu.
 # TODO: Déterminer les attributs et les méthodes à mettre dans la classe
 # Attributs : board_length, board, root, win_length
-# Méthodes :
+# Méthodes : run
 class Game():
     def __init__(self):
         self.__board_length = askinteger("Jeu","Quelle est la taille du plateau (entre 8 et 12) ?")
         self.__win_length = askinteger("Jeu","Nombre de marques à aligner pour gagner (entre 4 et 6) ?")
         self.__board = [[None for i in range(self.__board_length)] for j in range(self.__board_length)]
+
+    def run(self):
+        pass
 
 Game()
