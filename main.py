@@ -35,6 +35,5 @@ class Game():
         self.__board_length = askinteger("Jeu","Quelle est la taille du plateau (entre 8 et 12) ?")
         self.__win_length = askinteger("Jeu","Nombre de marques à aligner pour gagner (entre 4 et 6) ?")
         self.__board = [[None for i in range(self.__board_length)] for j in range(self.__board_length)]
-        print(self.__board)
 
 Game()
