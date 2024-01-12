@@ -46,6 +46,8 @@ class Game():
         self.__canvas.bind("<Button-1>", self.handle_click)
         self.__canvas.pack()
 
+        self.__pawns={}
+
         for i in range(self.__board_length+1):
             self.__canvas.create_line(25+i*50,25,25+i*50,25+50*self.__board_length)
             self.__canvas.create_line(25,25+i*50,25+50*self.__board_length,25+i*50)
@@ -70,13 +72,16 @@ class Game():
         if not coordinates:
             return
         
-        if self.__round =< 2:
+        if self.__round <= 2:
             # Placement des pions
             if self.__board[coordinates["y"]][coordinates["x"]] != None:
                 return
             self.__board[coordinates["y"]][coordinates["x"]] = Pawn((coordinates["x"], coordinates["y"]), self.__current_player)
+            shape=self.__canvas.create_oval(coordinates["x"]*50+30,coordinates["y"]*50+30,coordinates["x"]*50+70,coordinates["y"]*50+70, fill="#ff0000", width=0)
             self.__round += 1
-            self.__switch_player()
+            self.switch_player()
+            
+            
 
     def run(self):
         self.__root.mainloop()
