@@ -47,6 +47,7 @@ class Game():
         self.__canvas.pack()
 
         self.__pawns={}
+        self.__colors={"pawns": ["red","blue"]}
 
         for i in range(self.__board_length+1):
             self.__canvas.create_line(25+i*50,25,25+i*50,25+50*self.__board_length)
@@ -59,6 +60,7 @@ class Game():
 
     def switch_player(self):
         self.__current_player = (self.__current_player + 1) %2
+        self.__player_var.set(f"Joueur {self.__current_player + 1}")
 
     def get_square(self,x,y):
         square_x = (x-25)//50
@@ -77,7 +79,7 @@ class Game():
             if self.__board[coordinates["y"]][coordinates["x"]] != None:
                 return
             self.__board[coordinates["y"]][coordinates["x"]] = Pawn((coordinates["x"], coordinates["y"]), self.__current_player)
-            shape=self.__canvas.create_oval(coordinates["x"]*50+30,coordinates["y"]*50+30,coordinates["x"]*50+70,coordinates["y"]*50+70, fill="#ff0000", width=0)
+            shape=self.__canvas.create_oval(coordinates["x"]*50+30,coordinates["y"]*50+30,coordinates["x"]*50+70,coordinates["y"]*50+70, fill=self.__colors["pawns"][self.__current_player], width=0)
             self.__round += 1
             self.switch_player()
             
