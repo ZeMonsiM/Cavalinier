@@ -37,6 +37,6 @@ __Attributs :__
 - win_length -> int, nombre de marques à aligner pour gagner la partie
 
 __Fonctions et procédures :__
-- get_square(x,y) -> fonction convertissant les coordonnées d'un click dans le canvas en coordonnées d'une case du plateau.
+- get_square(x,y) -> fonction convertissant les coordonnées d'un click dans le canvas en coordonnées d'une case du plateau. Renvoie un dictionnaire contenant les coordonnées de la case du tableau.
 - handle_click(event) -> fonction exécutée à chaque click (...)
 - run() -> procédure chargée de lancer le jeu.

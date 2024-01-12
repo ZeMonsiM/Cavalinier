@@ -35,6 +35,9 @@ class Game():
         self.__board_length = askinteger("Jeu","Quelle est la taille du plateau (entre 8 et 12) ?")
         self.__win_length = askinteger("Jeu","Nombre de marques à aligner pour gagner (entre 4 et 6) ?")
         self.__board = [[None for i in range(self.__board_length)] for j in range(self.__board_length)]
+        self.__round = 1
+        self.__current_player = 0
+
         self.__root=Tk()
         self.__root.resizable(False, False)
         self.__root.title("Jeu")
@@ -52,11 +55,28 @@ class Game():
         self.__player_text=Label(self.__root, textvariable=self.__player_var, font=('Helvetica', 20), pady=12)
         self.__player_text.pack()
 
+    def switch_player(self):
+        self.__current_player = (self.__current_player + 1) %2
+
     def get_square(self,x,y):
-        pass
+        square_x = (x-25)//50
+        square_y = (y-25)//50
+        if square_x >= self.__board_length or square_y >= self.__board_length or square_x < 0 or square_y < 0:
+            return None
+        return {"x": square_x, "y": square_y}
 
     def handle_click(self,event):
-        pass
+        coordinates = self.get_square(event.x, event.y)
+        if not coordinates:
+            return
+        
+        if self.__round =< 2:
+            # Placement des pions
+            if self.__board[coordinates["y"]][coordinates["x"]] != None:
+                return
+            self.__board[coordinates["y"]][coordinates["x"]] = Pawn((coordinates["x"], coordinates["y"]), self.__current_player)
+            self.__round += 1
+            self.__switch_player()
 
     def run(self):
         self.__root.mainloop()
