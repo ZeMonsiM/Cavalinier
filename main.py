@@ -29,7 +29,7 @@ class Pawn():
 # Gère toute la logique du jeu.
 # TODO: Déterminer les attributs et les méthodes à mettre dans la classe
 # Attributs : board_length, board, root, win_length
-# Méthodes : run
+# Méthodes : run, get_square, handle_click
 class Game():
     def __init__(self):
         self.__board_length = askinteger("Jeu","Quelle est la taille du plateau (entre 8 et 12) ?")
@@ -39,16 +39,26 @@ class Game():
         self.__root.resizable(False, False)
         self.__root.title("Jeu")
         
-        self.__canvas=Canvas(self.__root, width=50*self.__board_length+50, height=50*self.__board_length+100, background="#FFFFFF")
+        self.__canvas=Canvas(self.__root, width=50*self.__board_length+50, height=50*self.__board_length+50)
+        self.__canvas.bind("<Button-1>", self.handle_click)
         self.__canvas.pack()
 
         for i in range(self.__board_length+1):
             self.__canvas.create_line(25+i*50,25,25+i*50,25+50*self.__board_length)
             self.__canvas.create_line(25,25+i*50,25+50*self.__board_length,25+i*50)
-        self.__player_text=Label(self.__root, text="Joueur 1")
+
+        self.__player_var = StringVar()
+        self.__player_var.set("Joueur 1")
+        self.__player_text=Label(self.__root, textvariable=self.__player_var, font=('Helvetica', 20), pady=12)
         self.__player_text.pack()
+
+    def get_square(self,x,y):
+        pass
+
+    def handle_click(self,event):
+        pass
+
     def run(self):
-        print(12)
         self.__root.mainloop()
 
 game=Game()

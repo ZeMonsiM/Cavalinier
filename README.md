@@ -31,7 +31,12 @@ __Fonctions et procédures :__
 Game correspond à la partie en cours. La classe gère l'interface utilisateur, les paramètres de la partie et toute la logique du cycle de jeu.
 
 __Attributs :__
-- ...
+- board_length -> int, taille du tableau en cases
+- board -> list, plateau de jeu stockant les valeurs de chaque case (vide, pion ou marque)
+- root -> fenêtre Tkinter principale
+- win_length -> int, nombre de marques à aligner pour gagner la partie
 
 __Fonctions et procédures :__
-- ...
+- get_square(x,y) -> fonction convertissant les coordonnées d'un click dans le canvas en coordonnées d'une case du plateau.
+- handle_click(event) -> fonction exécutée à chaque click (...)
+- run() -> procédure chargée de lancer le jeu.
