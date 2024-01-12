@@ -35,8 +35,21 @@ class Game():
         self.__board_length = askinteger("Jeu","Quelle est la taille du plateau (entre 8 et 12) ?")
         self.__win_length = askinteger("Jeu","Nombre de marques à aligner pour gagner (entre 4 et 6) ?")
         self.__board = [[None for i in range(self.__board_length)] for j in range(self.__board_length)]
+        self.__root=Tk()
+        self.__root.resizable(False, False)
+        self.__root.title("Jeu")
+        
+        self.__canvas=Canvas(self.__root, width=50*self.__board_length+50, height=50*self.__board_length+100, background="#FFFFFF")
+        self.__canvas.pack()
 
+        for i in range(self.__board_length+1):
+            self.__canvas.create_line(25+i*50,25,25+i*50,25+50*self.__board_length)
+            self.__canvas.create_line(25,25+i*50,25+50*self.__board_length,25+i*50)
+        self.__player_text=Label(self.__root, text="Joueur 1")
+        self.__player_text.pack()
     def run(self):
-        pass
+        print(12)
+        self.__root.mainloop()
 
-Game()
+game=Game()
+game.run()
