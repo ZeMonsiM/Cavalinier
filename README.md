@@ -23,7 +23,7 @@ __Fonctions et procédures :__
 - get_player() -> fonction renvoyant le numéro du joueur correspondant au pion.
 - can_move_to((x,y), board, board_length) -> fonction renvoyant True si le joueur peut déplacer son pion aux coordonnées x et y du tuple renseigné en entrée et False si ce n'est pas le cas.
 - is_stuck(board, board_length) -> fonction renvoyant True si le joueur ne peut plus déplacer son pion et False dans le cas inverse.
-- move((x,y)) -> fonction faisant bouger le pion du joueur aux coordonnées x et y du tuple renseigné en entrée, en partant de l'idée que le déplacement vers (x,y) est possible et vérifié par `can_move_to()`. Laisser une marque sur le plateau une fois le déplacement terminé. Retourne les coordonnées d'origine pour placer une marque sur le plateau.
+- move((x,y), board) -> fonction faisant bouger le pion du joueur aux coordonnées x et y du tuple renseigné en entrée, en partant de l'idée que le déplacement vers (x,y) est possible et vérifié par `can_move_to()`. Laisser une marque sur le plateau une fois le déplacement terminé. Retourne les coordonnées d'origine pour placer une marque sur le plateau.
 
 <div id="class_game"></div>
 
@@ -37,6 +37,7 @@ __Attributs :__
 - canvas, player_text -> éléments de l'interface graphique Tkinter (tableau et texte indiquant le joueur actif)
 - win_length -> int, nombre de marques à aligner pour gagner la partie
 - pawns -> list, contient les instances de la classe Pawn (pions des joueurs)
+- shapes -> list, contient les cercles représentant les pions dans l'interface utilisateur afin de modifier leurs coordonnées au déplacement.
 - colors -> dict, dictionnaire avec tous les paramètres de couleurs de l'interface graphique, incluant couleurs des pions et de l'interface graphique. Intégration future d'un mode sombre dans l'application
 - player_var -> StringVar, gère l'affichage du joueur actif (via player_text)
 
