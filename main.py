@@ -1,5 +1,6 @@
 from tkinter import *
 from tkinter.simpledialog import askinteger
+from tkinter.messagebox import showerror, showinfo
 
 # Classe Pawn
 # Représente le pion d'un joueur sur le plateau.
@@ -29,11 +30,16 @@ class Pawn():
 # Gère toute la logique du jeu.
 # TODO: Déterminer les attributs et les méthodes à mettre dans la classe
 # Attributs : board_length, board, root, win_length
-# Méthodes : run, get_square, handle_click
+# Méthodes : run, get_square, handle_click, switch_player, parameters_are_valid
 class Game():
     def __init__(self):
         self.__board_length = askinteger("Jeu","Quelle est la taille du plateau (entre 8 et 12) ?")
         self.__win_length = askinteger("Jeu","Nombre de marques à aligner pour gagner (entre 4 et 6) ?")
+
+        if not self.parameters_are_valid(self.__board_length, self.__win_length):
+            showerror("Erreur","Les paramètres de jeu sont incorrects ! Veuillez vérifier que la taille du plateau et que la condition de victoire soient bien configurés et réessayez.")
+            exit()
+
         self.__board = [[None for i in range(self.__board_length)] for j in range(self.__board_length)]
         self.__round = 1
         self.__current_player = 0
@@ -57,6 +63,13 @@ class Game():
         self.__player_var.set("Joueur 1")
         self.__player_text=Label(self.__root, textvariable=self.__player_var, font=('Helvetica', 20), pady=12)
         self.__player_text.pack()
+
+    def parameters_are_valid(self, board, victory):
+        if board < 8 or board > 12:
+            return False
+        if victory < 4 or victory > 6:
+            return False
+        return True
 
     def switch_player(self):
         self.__current_player = (self.__current_player + 1) %2
@@ -82,6 +95,10 @@ class Game():
             shape=self.__canvas.create_oval(coordinates["x"]*50+30,coordinates["y"]*50+30,coordinates["x"]*50+70,coordinates["y"]*50+70, fill=self.__colors["pawns"][self.__current_player], width=0)
             self.__round += 1
             self.switch_player()
+
+        if self.__round > 2:
+            # Déplacement des pions
+            pass
             
             
 
