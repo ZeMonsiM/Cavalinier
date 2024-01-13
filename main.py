@@ -40,12 +40,17 @@ class Pawn():
     def is_stuck(self, board, board_length):
         pass
 
-    def move(self, coordinates: tuple, board):
+    def move(self, coordinates: tuple, board, current_player, canvas, shapes, colors):
         old_coordinates = self.__coordinates
+        print(self.__coordinates)
         self.__coordinates = [coordinates[0], coordinates[1]] # Changement des coordonnées
         board[old_coordinates[1]][old_coordinates[0]] = self.__player # Rajouter la marque du joueur
         board[self.__coordinates[1]][self.__coordinates[0]] = "." # Déplacer le pion dans le board
         # TODO: Code de l'interface utilisateur (déplacement du pion et création du marqueur)
+        canvas.create_line(old_coordinates[0]*50+35,old_coordinates[1]*50+35,old_coordinates[0]*50+65,old_coordinates[1]*50+65,width=3,fill=colors["pawns"][current_player])
+        canvas.create_line(old_coordinates[0]*50+65,old_coordinates[1]*50+35,old_coordinates[0]*50+35,old_coordinates[1]*50+65,width=3,fill=colors["pawns"][current_player])
+        canvas.move(shapes[current_player], (self.__coordinates[0]-old_coordinates[0])*50, (self.__coordinates[1]-old_coordinates[1])*50)
+
 
 # Classe Game
 # Gère toute la logique du jeu.
@@ -136,7 +141,7 @@ class Game():
             # Déplacement des pions
             pawn = self.__pawns[self.__current_player]
             if pawn.can_move_to((coordinates["x"], coordinates["y"]), self.__board, self.__board_length):
-                pawn.move((coordinates["x"], coordinates["y"]), self.__board)
+                pawn.move((coordinates["x"], coordinates["y"]), self.__board, self.__current_player, self.__canvas, self.__shapes, self.__colors)
                 self.__round += 1
                 self.switch_player()
                 self.debug_print_board()
