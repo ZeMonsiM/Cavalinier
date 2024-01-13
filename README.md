@@ -5,6 +5,7 @@
 <ul>
     <li><a href="#class_pawn">La classe Pawn</a></li>
     <li><a href="#class_game">La classe Game</a></li>
+    <li><a href="#default_settings">Paramètres par défaut</a></li>
 </ul>
 
 ---
@@ -23,7 +24,9 @@ __Fonctions et procédures :__
 - get_player() -> fonction renvoyant le numéro du joueur correspondant au pion.
 - can_move_to((x,y), board, board_length) -> fonction renvoyant True si le joueur peut déplacer son pion aux coordonnées x et y du tuple renseigné en entrée et False si ce n'est pas le cas.
 - is_stuck(board, board_length) -> fonction renvoyant True si le joueur ne peut plus déplacer son pion et False dans le cas inverse.
-- move((x,y), board) -> fonction faisant bouger le pion du joueur aux coordonnées x et y du tuple renseigné en entrée, en partant de l'idée que le déplacement vers (x,y) est possible et vérifié par `can_move_to()`. Laisser une marque sur le plateau une fois le déplacement terminé. Retourne les coordonnées d'origine pour placer une marque sur le plateau.
+- move((x,y), board, canvas, shapes, colors) -> fonction faisant bouger le pion du joueur aux coordonnées x et y du tuple renseigné en entrée, en partant de l'idée que le déplacement vers (x,y) est possible et vérifié par `can_move_to()`. Laisser une marque sur le plateau une fois le déplacement terminé. Retourne les coordonnées d'origine pour placer une marque sur le plateau.
+
+---
 
 <div id="class_game"></div>
 
@@ -46,4 +49,13 @@ __Fonctions et procédures :__
 - switch_player() -> procédure faisant la rotation entre les deux joueurs.
 - get_square(x,y) -> fonction convertissant les coordonnées d'un click dans le canvas en coordonnées d'une case du plateau. Renvoie un dictionnaire contenant les coordonnées de la case du tableau.
 - handle_click(event) -> fonction exécutée à chaque click (...)
+- victory_by_align() -> fonction vérifiant si la condition de victoire par alignement de marques est remplie. Retourne True si c'est le cas, sinon, retourne False.
+- victory(reason) -> procédure affichant un message de victoire et mettant fin à la partie.
 - run() -> procédure chargée de lancer le jeu.
+
+---
+
+<div id="default_settings"></div>
+
+### Paramètres par défaut
+> Une partie peut être forcée avec les paramètres par défaut en spécifiant `True` lors de la création de l'instance de Game. Une grille de 10x10 sera alors utilisée et 5 marques devront être alignées pour déclencher la victoire par alignement.

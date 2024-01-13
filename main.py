@@ -38,25 +38,41 @@ class Pawn():
         return False
 
     def is_stuck(self, board, board_length):
-        pass
+        x,y = self.__coordinates[0], self.__coordinates[1]
+        if x < board_length - 1 and y > 1 and board[y-2][x+1] == None:
+            return False
+        if x < board_length - 2 and y > 0 and board[y-1][x+2] == None:
+            return False
+        if x < board_length - 2 and y < board_length - 1 and board[y+1][x+2] == None:
+            return False
+        if x < board_length - 1 and y < board_length - 2 and board[y+2][x+1] == None:
+            return False
+        if x > 0 and y < board_length - 2 and board[y+2][x-1] == None:
+            return False
+        if x > 1 and y < board_length - 1 and board[y+1][x-2] == None:
+            return False
+        if x > 1 and y > 0 and board[y-1][x-2] == None:
+            return False
+        if x > 0 and y > 1 and board[y-2][x-1] == None:
+            return False
+        return True
 
-    def move(self, coordinates: tuple, board, current_player, canvas, shapes, colors):
+    def move(self, coordinates: tuple, board, canvas, shapes, colors):
         old_coordinates = self.__coordinates
         print(self.__coordinates)
         self.__coordinates = [coordinates[0], coordinates[1]] # Changement des coordonnées
         board[old_coordinates[1]][old_coordinates[0]] = self.__player # Rajouter la marque du joueur
         board[self.__coordinates[1]][self.__coordinates[0]] = "." # Déplacer le pion dans le board
-        # TODO: Code de l'interface utilisateur (déplacement du pion et création du marqueur)
-        canvas.create_line(old_coordinates[0]*50+35,old_coordinates[1]*50+35,old_coordinates[0]*50+65,old_coordinates[1]*50+65,width=3,fill=colors["pawns"][current_player])
-        canvas.create_line(old_coordinates[0]*50+65,old_coordinates[1]*50+35,old_coordinates[0]*50+35,old_coordinates[1]*50+65,width=3,fill=colors["pawns"][current_player])
-        canvas.move(shapes[current_player], (self.__coordinates[0]-old_coordinates[0])*50, (self.__coordinates[1]-old_coordinates[1])*50)
+        
+        canvas.create_line(old_coordinates[0]*50+35,old_coordinates[1]*50+35,old_coordinates[0]*50+65,old_coordinates[1]*50+65,width=3,fill=colors["pawns"][self.__player])
+        canvas.create_line(old_coordinates[0]*50+65,old_coordinates[1]*50+35,old_coordinates[0]*50+35,old_coordinates[1]*50+65,width=3,fill=colors["pawns"][self.__player])
+        canvas.move(shapes[self.__player], (self.__coordinates[0]-old_coordinates[0])*50, (self.__coordinates[1]-old_coordinates[1])*50)
 
 
 # Classe Game
 # Gère toute la logique du jeu.
-# TODO: Déterminer les attributs et les méthodes à mettre dans la classe
 # Attributs : board_length, board, root (+ autres éléments de l'interface graphique), win_length, pawns, colors, player_var
-# Méthodes : run, get_square, handle_click, switch_player, parameters_are_valid
+# Méthodes : run, get_square, handle_click, switch_player, parameters_are_valid, victory_by_align, victory
 class Game():
     def __init__(self, use_default_values=False):
         if not use_default_values:
@@ -141,12 +157,21 @@ class Game():
             # Déplacement des pions
             pawn = self.__pawns[self.__current_player]
             if pawn.can_move_to((coordinates["x"], coordinates["y"]), self.__board, self.__board_length):
-                pawn.move((coordinates["x"], coordinates["y"]), self.__board, self.__current_player, self.__canvas, self.__shapes, self.__colors)
+                pawn.move((coordinates["x"], coordinates["y"]), self.__board, self.__canvas, self.__shapes, self.__colors)
                 self.__round += 1
                 self.switch_player()
                 self.debug_print_board()
+                other_pawn = self.__pawns[self.__current_player] # Joueur modifié par switch_player, le pion adverse est donc sélectionné
+                if other_pawn.is_stuck(self.__board, self.__board_length):
+                    self.switch_player()
+                    self.victory("Le joueur adverse est bloqué")
             
-            
+    def victory_by_align(self):
+        pass
+
+    def victory(self, reason):
+        showinfo("Victoire !",f"Le joueur {self.__current_player + 1} a gagné la partie !\n{reason}")
+        exit()
 
     def run(self):
         self.__root.mainloop()
