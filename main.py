@@ -17,10 +17,28 @@ class Pawn():
     def get_player(self):
         return self.__player
 
-    def can_move_to(self, coordinates: tuple, board):
-        pass
+    def can_move_to(self, destination: tuple, board, board_length):
+        # Vérification de tous les déplacements possibles individuellement
+        x,y = self.__coordinates[0], self.__coordinates[1]
+        if x < board_length - 1 and y > 1 and board[y-2][x+1] == None and destination == (x+1,y-2):
+            return True
+        if x < board_length - 2 and y > 0 and board[y-1][x+2] == None and destination == (x+2,y-1):
+            return True
+        if x < board_length - 2 and y < board_length - 1 and board[y+1][x+2] == None and destination == (x+2,y+1):
+            return True
+        if x < board_length - 1 and y < board_length - 2 and board[y+2][x+1] == None and destination == (x+1,y+2):
+            return True
+        if x > 0 and y < board_length - 2 and board[y+2][x-1] == None and destination == (x-1,y+2):
+            return True
+        if x > 1 and y < board_length - 1 and board[y+1][x-2] == None and destination == (x-2,y+1):
+            return True
+        if x > 1 and y > 0 and board[y-1][x-2] == None and destination == (x-2,y-1):
+            return True
+        if x > 0 and y > 1 and board[y-2][x-1] == None and destination == (x-1,y-2):
+            return True
+        return False
 
-    def is_stuck(self, board):
+    def is_stuck(self, board, board_length):
         pass
 
     def move(self, coordinates: tuple):
@@ -29,18 +47,23 @@ class Pawn():
 # Classe Game
 # Gère toute la logique du jeu.
 # TODO: Déterminer les attributs et les méthodes à mettre dans la classe
-# Attributs : board_length, board, root, win_length
+# Attributs : board_length, board, root (+ autres éléments de l'interface graphique), win_length, pawns, colors, player_var
 # Méthodes : run, get_square, handle_click, switch_player, parameters_are_valid
 class Game():
-    def __init__(self):
-        self.__board_length = askinteger("Jeu","Quelle est la taille du plateau (entre 8 et 12) ?")
-        self.__win_length = askinteger("Jeu","Nombre de marques à aligner pour gagner (entre 4 et 6) ?")
+    def __init__(self, use_default_values=False):
+        if not use_default_values:
+            self.__board_length = askinteger("Jeu","Quelle est la taille du plateau (entre 8 et 12) ?")
+            self.__win_length = askinteger("Jeu","Nombre de marques à aligner pour gagner (entre 4 et 6) ?")
 
-        if not self.parameters_are_valid(self.__board_length, self.__win_length):
-            showerror("Erreur","Les paramètres de jeu sont incorrects ! Veuillez vérifier que la taille du plateau et que la condition de victoire soient bien configurés et réessayez.")
-            exit()
+            if not self.parameters_are_valid(self.__board_length, self.__win_length):
+                showerror("Erreur","Les paramètres de jeu sont incorrects ! Veuillez vérifier que la taille du plateau et que la condition de victoire soient bien configurées et réessayez.")
+                exit()
+        else:
+            self.__board_length = 10
+            self.__win_length = 5
 
         self.__board = [[None for i in range(self.__board_length)] for j in range(self.__board_length)]
+        self.__pawns = [None, None]
         self.__round = 1
         self.__current_player = 0
 
@@ -52,7 +75,6 @@ class Game():
         self.__canvas.bind("<Button-1>", self.handle_click)
         self.__canvas.pack()
 
-        self.__pawns={}
         self.__colors={"pawns": ["red","blue"]}
 
         for i in range(self.__board_length+1):
@@ -91,19 +113,23 @@ class Game():
             # Placement des pions
             if self.__board[coordinates["y"]][coordinates["x"]] != None:
                 return
-            self.__board[coordinates["y"]][coordinates["x"]] = Pawn((coordinates["x"], coordinates["y"]), self.__current_player)
+            self.__board[coordinates["y"]][coordinates["x"]] = "."
+            self.__pawns[self.__current_player] = Pawn((coordinates["x"], coordinates["y"]), self.__current_player)
             shape=self.__canvas.create_oval(coordinates["x"]*50+30,coordinates["y"]*50+30,coordinates["x"]*50+70,coordinates["y"]*50+70, fill=self.__colors["pawns"][self.__current_player], width=0)
             self.__round += 1
             self.switch_player()
+            return
 
         if self.__round > 2:
             # Déplacement des pions
-            pass
+            pawn = self.__pawns[self.__current_player]
+            if pawn.can_move_to((coordinates["x"], coordinates["y"]), self.__board, self.__board_length):
+                pass
             
             
 
     def run(self):
         self.__root.mainloop()
 
-game=Game()
+game=Game(True)
 game.run()
