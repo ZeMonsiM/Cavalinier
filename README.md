@@ -1,5 +1,5 @@
 # 1ALGO
- Projet pour le chapitre de 1ALGO
+ Projet Python pour le chapitre de 1ALGO.
 
 ## Documentation
 <ul>
@@ -49,7 +49,9 @@ __Fonctions et procédures :__
 - switch_player() -> procédure faisant la rotation entre les deux joueurs.
 - get_square(x,y) -> fonction convertissant les coordonnées d'un click dans le canvas en coordonnées d'une case du plateau. Renvoie un dictionnaire contenant les coordonnées de la case du tableau.
 - handle_click(event) -> fonction exécutée à chaque click (...)
-- victory_by_align() -> fonction vérifiant si la condition de victoire par alignement de marques est remplie. Retourne True si c'est le cas, sinon, retourne False.
+- check_board_for_alignment() -> procédure parcourant toutes les cases du plateau de jeu pour y trouver des marques laissées par les joueurs. Appelle la procédure `check_nearby_squares()` pour continuer la vérification.
+- check_nearby_squares(player, (x,y)) -> procédure vérifiant si une marque du joueur existe autour des coordonnées spécifiées. Appelle la procédure `check_length()` pour vérifier si d'autres marques sont alignées.
+- check_length((x,y), player, length, direction) -> procédure récursive vérifiant la longueur d'un alignement de marques du joueur. `check_length()` vérifie dans une direction précise donnée par la procédure `check_nearby_squares()` et incrémente `length` à chaque marque trouvée, jusqu'à ce que la condition de victoire soit satisfaite.
 - victory(reason) -> procédure affichant un message de victoire et mettant fin à la partie.
 - run() -> procédure chargée de lancer le jeu.
 

@@ -165,9 +165,64 @@ class Game():
                 if other_pawn.is_stuck(self.__board, self.__board_length):
                     self.switch_player()
                     self.victory("Le joueur adverse est bloqué")
+                self.check_board_for_alignment()
             
-    def victory_by_align(self):
-        pass
+    def check_board_for_alignment(self):
+        for line in range(self.__board_length):
+            for column in range(self.__board_length):
+                if self.__board[line][column] == 0 or self.__board[line][column] == 1:
+                    self.check_nearby_squares(self.__board[line][column], (column, line))
+
+    def check_nearby_squares(self, player, coordinates: tuple):
+        x,y = coordinates[0], coordinates[1]
+        if y > 0 and self.__board[y-1][x] == player:
+            self.check_length(coordinates, player, 1, "top")
+        if x < self.__board_length -1 and y > 0 and self.__board[y-1][x+1] == player:
+            self.check_length(coordinates, player, 1, "top_right")
+        if x < self.__board_length -1 and self.__board[y][x+1] == player:
+            self.check_length(coordinates, player, 1, "right")
+        if x < self.__board_length -1 and y < self.__board_length -1 and self.__board[y+1][x+1] == player:
+            self.check_length(coordinates, player, 1, "bottom_right")
+        if y < self.__board_length -1 and self.__board[y+1][x] == player:
+            self.check_length(coordinates, player, 1, "bottom")
+        if x > 0 and y < self.__board_length -1 and self.__board[y+1][x-1] == player:
+            self.check_length(coordinates, player, 1, "bottom_left")
+        if x > 0 and self.__board[y][x-1] == player:
+            self.check_length(coordinates, player, 1, "left")
+        if x > 0 and y > 0 and self.__board[y-1][x-1] == player:
+            self.check_length(coordinates, player, 1, "top_left")
+
+    def check_length(self, coordinates: tuple, player, length, direction):
+        x,y = coordinates[0], coordinates[1]
+        board_length = self.__board_length
+        board = self.__board
+        conditions = {
+            "top": "y > 0 and board[y-1][x] == player",
+            "top_right": "x < board_length -1 and y > 0 and board[y-1][x+1] == player",
+            "right": "x < board_length -1 and board[y][x+1] == player",
+            "bottom_right": "x < board_length -1 and y < board_length -1 and board[y+1][x+1] == player",
+            "bottom": "y < board_length -1 and board[y+1][x] == player",
+            "bottom_left": "x > 0 and y < board_length -1 and board[y+1][x-1] == player",
+            "left": "x > 0 and board[y][x-1] == player",
+            "top_left": "x > 0 and y > 0 and board[y-1][x-1] == player"
+        }
+        new_coordinates = {
+            "top": (x,y-1),
+            "top_right": (x+1,y-1),
+            "right": (x+1,y),
+            "bottom_right": (x+1,y+1),
+            "bottom": (x,y+1),
+            "bottom_left": (x-1,y+1),
+            "left": (x-1,y),
+            "top_left": (x-1,y-1)
+        }
+
+        if length >= self.__win_length:
+            self.switch_player()
+            self.victory(f"{self.__win_length} marques ont été alignées par le joueur {player + 1}.")
+        
+        if eval(conditions[direction]):
+            self.check_length(new_coordinates[direction], player, length + 1, direction)
 
     def victory(self, reason):
         showinfo("Victoire !",f"Le joueur {self.__current_player + 1} a gagné la partie !\n{reason}")
