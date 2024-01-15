@@ -100,7 +100,19 @@ class Game():
         self.__canvas.bind("<Button-1>", self.handle_click)
         self.__canvas.pack()
 
-        self.__colors={"pawns": ["red","blue"]}
+        self.__colors={
+                "pawns": ["red","blue"],
+                "interface": {
+                    "light": {
+                        "background": "#FFFFFF",
+                        "foreground": "#000000"
+                    },
+                    "dark": {
+                        "background": "#222222",
+                        "foreground": "#FFFFFF"
+                    }
+                }
+        }
 
         for i in range(self.__board_length+1):
             self.__canvas.create_line(25+i*50,25,25+i*50,25+50*self.__board_length)
