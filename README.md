@@ -48,6 +48,7 @@ __Attributs :__
 - player_var -> StringVar, gère l'affichage du joueur actif (via player_text)
 
 __Fonctions et procédures :__
+- load_settings() -> fonction pour charger les paramètres du jeu depuis le fichier `options.txt`. Retourne un dictionnaire contenant tous les paramètres. Si le fichier n'existe pas, il est créé avec les paramètres par défaut.
 - parameters_are_valid(board, victory) -> fonction vérifiant si les paramètres passés en entrée sont conformes et retourne True si c'est le cas, sinon, retourne False.
 - switch_player() -> procédure faisant la rotation entre les deux joueurs.
 - get_square(x,y) -> fonction convertissant les coordonnées d'un click dans le canvas en coordonnées d'une case du plateau. Renvoie un dictionnaire contenant les coordonnées de la case du tableau.

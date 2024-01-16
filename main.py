@@ -75,7 +75,12 @@ class Pawn():
 # Attributs : board_length, board, root (+ autres éléments de l'interface graphique), win_length, pawns, colors, player_var
 # Méthodes : run, get_square, handle_click, switch_player, parameters_are_valid, victory_by_align, victory
 class Game():
-    def __init__(self, use_default_values=False):
+    def __init__(self):
+        settings = self.load_settings()
+        use_default_values = settings['use_default_settings']
+        use_custom_colors = settings['use_custom_colors']
+        self.__ui_theme = settings['theme']
+
         if not use_default_values:
             self.__board_length = askinteger("Jeu","Quelle est la taille du plateau (entre 8 et 12) ?")
             self.__win_length = askinteger("Jeu","Nombre de marques à aligner pour gagner (entre 4 et 6) ?")
@@ -131,6 +136,26 @@ class Game():
         self.__player_var.set("Joueur 1")
         self.__player_text=Label(self.__root, textvariable=self.__player_var, font=('Helvetica', 20), pady=12)
         self.__player_text.pack()
+    
+    def load_settings(self):
+        if not exists('options.txt'):
+            showinfo("Jeu","Le fichier 'options.txt' est introuvable. Création du fichier avec les paramètres par défaut...")
+            with open('options.txt','w') as settings_file:
+                settings_file.write("use_default_settings=no\ntheme=light\nuse_custom_colors=no")
+            return {'use_default_settings': False, 'theme': 'light', 'use_custom_colors': False}
+        
+        with open('options.txt','r') as settings_file:
+            parameters = settings_file.readlines()
+        
+        settings = {}
+        for line in parameters:
+            parts = line.split("=")
+            settings[parts[0]] = parts[1].replace("\n","")
+        
+        settings['use_default_settings'] = True if settings['use_default_settings'] == "yes" else False
+        settings['use_custom_colors'] = True if settings['use_custom_colors'] == "yes" else False
+        
+        return settings
 
     # Fonction de débug : affichage du board dans la console
     def debug_print_board(self):
@@ -139,6 +164,8 @@ class Game():
             print(line)
 
     def parameters_are_valid(self, board, victory):
+        if not board or not victory:
+            return False
         if board < 8 or board > 12:
             return False
         if victory < 4 or victory > 6:
@@ -248,8 +275,10 @@ class Game():
         exit()
     
     def clear_interface(self):
-        #TODO: Code pour réinitialiser le tableau côté interface graphique
-        pass
+        self.__canvas.delete('all')
+        for i in range(self.__board_length+1):
+            self.__canvas.create_line(25+i*50,25,25+i*50,25+50*self.__board_length)
+            self.__canvas.create_line(25,25+i*50,25+50*self.__board_length,25+i*50)
     
     def reset(self):
         # Réinitialiser le plateau
@@ -303,6 +332,10 @@ class Game():
         self.__round = json_string['round']
         self.__player_var.set(f"Joueur {self.__current_player + 1}")
 
+        self.clear_interface()
+        self.__canvas.config(width=50*self.__board_length+50, height=50*self.__board_length+50)
+        self.__root.geometry(f"{50*self.__board_length+50}x{50*self.__board_length+100}")
+
         for player in range(2):
             # Données des joueurs
             self.__colors['pawns'][player] = json_string['players'][player]['color']
@@ -311,7 +344,6 @@ class Game():
             self.__shapes[player] = self.__canvas.create_oval(json_string['players'][player]['x']*50+30,json_string['players'][player]['y']*50+30,json_string['players'][player]['x']*50+70,json_string['players'][player]['y']*50+70, fill=self.__colors["pawns"][player], width=0)
 
         # Redessiner le plateau depuis la sauvegarde
-        self.clear_interface()
         for y in range(self.__board_length):
             for x in range(self.__board_length):
                 if type(self.__board[y][x]) == int:
@@ -322,5 +354,5 @@ class Game():
     def run(self):
         self.__root.mainloop()
 
-game=Game(False)
+game=Game()
 game.run()
