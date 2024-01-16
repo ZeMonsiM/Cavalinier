@@ -1,6 +1,8 @@
 from tkinter import *
 from tkinter.simpledialog import askinteger
 from tkinter.messagebox import showerror, showinfo
+import json
+from os.path import exists
 
 # Classe Pawn
 # Représente le pion d'un joueur sur le plateau.
@@ -59,7 +61,6 @@ class Pawn():
 
     def move(self, coordinates: tuple, board, canvas, shapes, colors):
         old_coordinates = self.__coordinates
-        print(self.__coordinates)
         self.__coordinates = [coordinates[0], coordinates[1]] # Changement des coordonnées
         board[old_coordinates[1]][old_coordinates[0]] = self.__player # Rajouter la marque du joueur
         board[self.__coordinates[1]][self.__coordinates[0]] = "." # Déplacer le pion dans le board
@@ -89,12 +90,20 @@ class Game():
         self.__board = [[None for i in range(self.__board_length)] for j in range(self.__board_length)]
         self.__pawns = [None, None]
         self.__shapes = [None, None]
+        self.__player_names = [None, None]
         self.__round = 1
         self.__current_player = 0
 
         self.__root=Tk()
         self.__root.resizable(False, False)
         self.__root.title("Jeu")
+
+        menu = Menu(self.__root)
+        self.__root.config(menu=menu)
+        menu.add_command(label="Réinitialiser", command=self.reset)
+        menu.add_command(label="Sauvegarder", command=self.save_game)
+        menu.add_command(label="Charger", command=self.load_game)
+        menu.add_command(label="Quitter", command=exit)
         
         self.__canvas=Canvas(self.__root, width=50*self.__board_length+50, height=50*self.__board_length+50)
         self.__canvas.bind("<Button-1>", self.handle_click)
@@ -162,7 +171,6 @@ class Game():
             self.__shapes[self.__current_player] = shape
             self.__round += 1
             self.switch_player()
-            self.debug_print_board()
             return
 
         if self.__round > 2:
@@ -172,7 +180,6 @@ class Game():
                 pawn.move((coordinates["x"], coordinates["y"]), self.__board, self.__canvas, self.__shapes, self.__colors)
                 self.__round += 1
                 self.switch_player()
-                self.debug_print_board()
                 other_pawn = self.__pawns[self.__current_player] # Joueur modifié par switch_player, le pion adverse est donc sélectionné
                 if other_pawn.is_stuck(self.__board, self.__board_length):
                     self.switch_player()
@@ -239,9 +246,81 @@ class Game():
     def victory(self, reason):
         showinfo("Victoire !",f"Le joueur {self.__current_player + 1} a gagné la partie !\n{reason}")
         exit()
+    
+    def clear_interface(self):
+        #TODO: Code pour réinitialiser le tableau côté interface graphique
+        pass
+    
+    def reset(self):
+        # Réinitialiser le plateau
+        self.__board = [[None for i in range(self.__board_length)] for j in range(self.__board_length)]
+
+        # Réinitialiser les pions des joueurs et le joueur actif
+        self.__pawns = [None, None]
+        self.__shapes = [None, None]
+        self.__round = 1
+        self.__current_player = 0
+
+        # Réinitialiser l'interface graphique
+        self.clear_interface()
+    
+    def save_game(self):
+        json_string = json.dumps({
+            "players": [
+                {
+                    "name": self.__player_names[0],
+                    "color": self.__colors["pawns"][0],
+                    "x": self.__pawns[0].get_coordinates()[0],
+                    "y": self.__pawns[0].get_coordinates()[1]
+                },
+                {
+                    "name": self.__player_names[1],
+                    "color": self.__colors["pawns"][1],
+                    "x": self.__pawns[1].get_coordinates()[0],
+                    "y": self.__pawns[1].get_coordinates()[1]
+                }
+            ],
+            "board": self.__board,
+            "win_length": self.__win_length,
+            "current_player": self.__current_player,
+            "round": self.__round
+        }, indent=2)
+        with open('save.json','w') as save_file:
+            save_file.write(json_string)
+
+    def load_game(self):
+        if not exists("save.json"):
+            showerror("Charger","Il n'y a pas de fichier de sauvegarde disponible !")
+        
+        with open('save.json','r') as save_file:
+            json_string = json.loads(save_file.read())
+        
+        # Charger les données de la sauvegarde
+        self.__board = json_string['board']
+        self.__board_length = len(self.__board)
+        self.__win_length = json_string['win_length']
+        self.__current_player = json_string['current_player']
+        self.__round = json_string['round']
+        self.__player_var.set(f"Joueur {self.__current_player + 1}")
+
+        for player in range(2):
+            # Données des joueurs
+            self.__colors['pawns'][player] = json_string['players'][player]['color']
+            self.__player_names[player] = json_string['players'][player]['name']
+            self.__pawns[player] = Pawn((json_string['players'][player]['x'], json_string['players'][player]['y']), player)
+            self.__shapes[player] = self.__canvas.create_oval(json_string['players'][player]['x']*50+30,json_string['players'][player]['y']*50+30,json_string['players'][player]['x']*50+70,json_string['players'][player]['y']*50+70, fill=self.__colors["pawns"][player], width=0)
+
+        # Redessiner le plateau depuis la sauvegarde
+        self.clear_interface()
+        for y in range(self.__board_length):
+            for x in range(self.__board_length):
+                if type(self.__board[y][x]) == int:
+                    # Marque détectée, dessiner la marque
+                    self.__canvas.create_line(x*50+35,y*50+35,x*50+65,y*50+65,width=3,fill=self.__colors["pawns"][self.__board[y][x]])
+                    self.__canvas.create_line(x*50+65,y*50+35,x*50+35,y*50+65,width=3,fill=self.__colors["pawns"][self.__board[y][x]])
 
     def run(self):
         self.__root.mainloop()
 
-game=Game(True)
+game=Game(False)
 game.run()

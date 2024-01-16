@@ -5,7 +5,8 @@
 <ul>
     <li><a href="#class_pawn">La classe Pawn</a></li>
     <li><a href="#class_game">La classe Game</a></li>
-    <li><a href="#settings_guide">Guide de paramétrage</a><li>
+    <li><a href="#save_load_feature">Sauvegarde</a></li>
+    <li><a href="#settings_guide">Guide de paramétrage</a></li>
     <li><a href="#default_settings">Paramètres par défaut</a></li>
     <li><a href="#color_themes">Thèmes de l'interface</a></li>
 </ul>
@@ -55,7 +56,38 @@ __Fonctions et procédures :__
 - check_nearby_squares(player, (x,y)) -> procédure vérifiant si une marque du joueur existe autour des coordonnées spécifiées. Appelle la procédure `check_length()` pour vérifier si d'autres marques sont alignées.
 - check_length((x,y), player, length, direction) -> procédure récursive vérifiant la longueur d'un alignement de marques du joueur. `check_length()` vérifie dans une direction précise donnée par la procédure `check_nearby_squares()` et incrémente `length` à chaque marque trouvée, jusqu'à ce que la condition de victoire soit satisfaite.
 - victory(reason) -> procédure affichant un message de victoire et mettant fin à la partie.
+- clear_interface() -> procédure chargée de réinitialiser le plateau du côté de l'interface graphique, en supprimant toutes les marques.
+- reset() -> procédure qui réinitialise la partie en cours lorsque le joueur clique sur "Réinitialiser" dans le menu du jeu.
+- save_game() -> procédure enregistrant les informations de la partie en cours dans un fichier `save.json`.
+- load_game() -> procédure qui charge les informations de la partie sauvegardée dans `save.json`.
 - run() -> procédure chargée de lancer le jeu.
+
+---
+
+<div id="save_load_feature"></div>
+
+### Fonction de sauvegarde de partie
+Le jeu intègre une fonction de sauvegarde de la partie en cours pour les parties les plus longues. Le fichier de sauvegarde est écrit en JSON afin de conserver facilement les données dans un format lisible aussi bien par l'humain que par la machine.
+La sauvegarde est enregistrée sous la forme suivante :
+```json
+{
+    "players": [
+        {
+            "name": "Player Name",
+            "color": "#FF0000",
+            "x": 0,
+            "y": 0
+        },
+        {
+            "name": "Player Name",
+            "color": "#0000FF",
+            "x": 5,
+            "y": 5
+        }
+    ],
+    "board": [[],[],[],[],[]]
+}
+```
 
 ---
 
