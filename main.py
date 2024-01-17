@@ -1,8 +1,9 @@
 from tkinter import *
 from tkinter.simpledialog import askinteger
-from tkinter.messagebox import showerror, showinfo
-import json
+from tkinter.messagebox import showerror, showinfo, askyesno
 from os.path import exists
+from random import randint
+import json
 
 # Classe Pawn
 # Représente le pion d'un joueur sur le plateau.
@@ -84,6 +85,7 @@ class Game():
         if not use_default_values:
             self.__board_length = askinteger("Jeu","Quelle est la taille du plateau (entre 8 et 12) ?")
             self.__win_length = askinteger("Jeu","Nombre de marques à aligner pour gagner (entre 4 et 6) ?")
+            self.__multiplayer = askyesno("Jeu","Voulez vous jouer en multijoueur ?")
 
             if not self.parameters_are_valid(self.__board_length, self.__win_length):
                 showerror("Erreur","Les paramètres de jeu sont incorrects ! Veuillez vérifier que la taille du plateau et que la condition de victoire soient bien configurées et réessayez.")
@@ -198,6 +200,8 @@ class Game():
             self.__shapes[self.__current_player] = shape
             self.__round += 1
             self.switch_player()
+            if not self.__multiplayer:
+                self.play_ai()
             return
 
         if self.__round > 2:
@@ -212,6 +216,9 @@ class Game():
                     self.switch_player()
                     self.victory("Le joueur adverse est bloqué")
                 self.check_board_for_alignment()
+                if not self.__multiplayer:
+                    self.play_ai()
+                return
             
     def check_board_for_alignment(self):
         for line in range(self.__board_length):
@@ -350,6 +357,46 @@ class Game():
                     # Marque détectée, dessiner la marque
                     self.__canvas.create_line(x*50+35,y*50+35,x*50+65,y*50+65,width=3,fill=self.__colors["pawns"][self.__board[y][x]])
                     self.__canvas.create_line(x*50+65,y*50+35,x*50+35,y*50+65,width=3,fill=self.__colors["pawns"][self.__board[y][x]])
+
+    def play_ai(self):
+        pawn = self.__pawns[self.__current_player]
+        valid_move = False
+        if not pawn:
+            # Premier tour
+            while not valid_move:
+                x,y = randint(0, self.__board_length - 1), randint(0, self.__board_length - 1)
+                valid_move = True if self.__board[y][x] == None else False
+            self.__board[y][x] = "."
+            self.__pawns[self.__current_player] = Pawn((x, y), self.__current_player)
+            shape=self.__canvas.create_oval(x*50+30,y*50+30,x*50+70,y*50+70, fill=self.__colors["pawns"][self.__current_player], width=0)
+            self.__shapes[self.__current_player] = shape
+            self.__round += 1
+            self.switch_player()
+            return
+
+        # Déplacement de pion
+        coordinates = pawn.get_coordinates()
+        x,y = coordinates[0], coordinates[1]
+        destinations = [
+            (x+1,y-2),
+            (x+2,y-1),
+            (x+2,y+1),
+            (x+1,y+2),
+            (x-1,y+2),
+            (x-2,y+1),
+            (x-2,y-1),
+            (x-1,y-2)
+        ]
+
+        while not valid_move:
+            selected_destination = destinations[randint(0,7)]
+            print(selected_destination)
+            valid_move = pawn.can_move_to(selected_destination, self.__board, self.__board_length)
+            print(valid_move)
+
+        pawn.move(selected_destination, self.__board, self.__canvas, self.__shapes, self.__colors)
+        self.__round += 1
+        self.switch_player()
 
     def run(self):
         self.__root.mainloop()

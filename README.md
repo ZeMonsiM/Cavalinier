@@ -1,5 +1,13 @@
 # 1ALGO
- Projet Python pour le chapitre de 1ALGO.
+ Projet Python pour le chapitre de 1ALGO. Jeu de stratégie sur un plateau avec Python et Tkinter, incluant un système de sauvegardes.
+
+## Installation
+### Clonage des fichiers du jeu depuis Github
+Pour télécharger le code source du jeu et y jouer, vous devez tout d'abord cloner le répertoire Github. Si vous avez Git installé sur votre machine, ouvrez le terminal de votre ordinateur et tapez cette commande :
+```
+git clone https://github.com/ZeMonsiM/1ALGO.git
+```
+Si vous n'avez pas Git sur votre machine, vous pouvez télécharger les fichiers depuis la release disponible sur le répertoire Github.
 
 ## Documentation
 <ul>
@@ -39,6 +47,7 @@ Game correspond à la partie en cours. La classe gère l'interface utilisateur, 
 __Attributs :__
 - board_length -> int, taille du tableau en cases
 - board -> list, plateau de jeu stockant les valeurs de chaque case (vide, pion ou marque)
+- multiplayer -> bool, permet de déterminer le mode de jeu sélectionné par le joueur. Lance le jeu en multijoueur si `True`, sinon, lance le jeu en solo contre l'ordinateur.
 - root -> fenêtre Tkinter principale
 - canvas, player_text -> éléments de l'interface graphique Tkinter (tableau et texte indiquant le joueur actif)
 - win_length -> int, nombre de marques à aligner pour gagner la partie
@@ -61,6 +70,7 @@ __Fonctions et procédures :__
 - reset() -> procédure qui réinitialise la partie en cours lorsque le joueur clique sur "Réinitialiser" dans le menu du jeu.
 - save_game() -> procédure enregistrant les informations de la partie en cours dans un fichier `save.json`.
 - load_game() -> procédure qui charge les informations de la partie sauvegardée dans `save.json`.
+- play_ai() -> procédure qui joue une manche par l'ordinateur dans le mode solo.
 - run() -> procédure chargée de lancer le jeu.
 
 ---
