@@ -406,6 +406,10 @@ class Game():
         self.__round += 1
         self.__round_var.set("Round "+str(self.__round))
         self.switch_player()
+        other_pawn = self.__pawns[self.__current_player] # Joueur modifié par switch_player, le pion adverse est donc sélectionné
+        if other_pawn.is_stuck(self.__board, self.__board_length):
+            self.switch_player()
+            self.victory("Le joueur adverse est bloqué")
 
     def run(self):
         self.__root.mainloop()
