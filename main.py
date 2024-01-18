@@ -138,13 +138,13 @@ class Game():
         menu.add_command(label="Charger", command=self.load_game)
         menu.add_command(label="Quitter", command=exit)
         
-        self.__canvas=Canvas(self.__root, width=50*self.__board_length+50, height=50*self.__board_length+50)
+        self.__canvas=Canvas(self.__root, width=50*self.__board_length+50, height=50*self.__board_length+50,background=self.__colors["interface"]["dark"]["background"])
         self.__canvas.bind("<Button-1>", self.handle_click)
         self.__canvas.pack()
 
         for i in range(self.__board_length+1):
-            self.__canvas.create_line(25+i*50,25,25+i*50,25+50*self.__board_length)
-            self.__canvas.create_line(25,25+i*50,25+50*self.__board_length,25+i*50)
+            self.__canvas.create_line(25+i*50,25,25+i*50,25+50*self.__board_length,fill=self.__colors["interface"]["dark"]["foreground"])
+            self.__canvas.create_line(25,25+i*50,25+50*self.__board_length,25+i*50,fill=self.__colors["interface"]["dark"]["foreground"])
 
         self.__round_var = StringVar()
         self.__round_var.set("Round "+str(self.__round))
@@ -304,8 +304,8 @@ class Game():
     def clear_interface(self):
         self.__canvas.delete('all')
         for i in range(self.__board_length+1):
-            self.__canvas.create_line(25+i*50,25,25+i*50,25+50*self.__board_length)
-            self.__canvas.create_line(25,25+i*50,25+50*self.__board_length,25+i*50)
+            self.__canvas.create_line(25+i*50,25,25+i*50,25+50*self.__board_length,fill=self.__colors["interface"]["dark"]["foreground"])
+            self.__canvas.create_line(25,25+i*50,25+50*self.__board_length,25+i*50,fill=self.__colors["interface"]["dark"]["foreground"])
     
     def reset(self):
         # Réinitialiser le plateau
@@ -361,7 +361,7 @@ class Game():
 
         self.clear_interface()
         self.__canvas.config(width=50*self.__board_length+50, height=50*self.__board_length+50)
-        self.__root.geometry(f"{50*self.__board_length+50}x{50*self.__board_length+100}")
+        self.__root.geometry(f"{50*self.__board_length+55}x{50*self.__board_length+143}")
 
         for player in range(2):
             # Données des joueurs
