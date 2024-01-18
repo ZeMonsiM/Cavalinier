@@ -157,23 +157,21 @@ class Game():
         self.__player_text.pack()
     
     def load_settings(self):
-        if not exists('options.txt'):
-            showinfo("Jeu","Le fichier 'options.txt' est introuvable. Création du fichier avec les paramètres par défaut...")
+        if not exists('options.json'):
+            showinfo("Jeu","Le fichier 'options.json' est introuvable. Création du fichier avec les paramètres par défaut...")
             with open('options.txt','w') as settings_file:
-                settings_file.write("use_default_settings=no\ntheme=light\nuse_custom_colors=no")
-            return {'use_default_settings': False, 'theme': 'light', 'use_custom_colors': False}
+                settings = {
+                    "use_default_settings": True,
+                    "theme": "light",
+                    "use_custom_colors": True,
+                    "use_custom_names": True
+                }
+                json_string = json.dumps(settings, indent=2)
+                settings_file.write(json_string)
+            return settings
         
-        with open('options.txt','r') as settings_file:
-            parameters = settings_file.readlines()
-        
-        settings = {}
-        for line in parameters:
-            parts = line.split("=")
-            settings[parts[0]] = parts[1].replace("\n","")
-        
-        settings['use_default_settings'] = True if settings['use_default_settings'] == "yes" else False
-        settings['use_custom_colors'] = True if settings['use_custom_colors'] == "yes" else False
-        settings['use_custom_names'] = True if settings['use_custom_names'] == "yes" else False
+        with open('options.json','r') as settings_file:
+            settings = json.loads(settings_file.read())
         
         return settings
 
