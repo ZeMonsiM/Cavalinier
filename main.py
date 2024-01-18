@@ -1,6 +1,7 @@
 from tkinter import *
-from tkinter.simpledialog import askinteger
+from tkinter.simpledialog import askinteger, askstring
 from tkinter.messagebox import showerror, showinfo, askyesno
+from tkinter.colorchooser import askcolor
 from os.path import exists
 from random import randint
 import json
@@ -80,6 +81,7 @@ class Game():
         settings = self.load_settings()
         use_default_values = settings['use_default_settings']
         use_custom_colors = settings['use_custom_colors']
+        use_custom_names = settings['use_custom_names']
         self.__ui_theme = settings['theme']
 
         if not use_default_values:
@@ -93,11 +95,35 @@ class Game():
         else:
             self.__board_length = 10
             self.__win_length = 5
+            self.__multiplayer = True
+        
+        self.__player_names = [None, None]
+        if use_custom_names:
+            players = 2 if self.__multiplayer else 1
+            for i in range(players):
+                self.__player_names[i] = askstring("Jeu",f"Joueur {i + 1} : Entrez votre pseudo...")
+
+        self.__colors={
+                "pawns": ["red","blue"],
+                "interface": {
+                    "light": {
+                        "background": "#FFFFFF",
+                        "foreground": "#000000"
+                    },
+                    "dark": {
+                        "background": "#222222",
+                        "foreground": "#FFFFFF"
+                    }
+                }
+        }
+        if use_custom_colors:
+            players = 2 if self.__multiplayer else 1
+            for i in range(players):
+                self.__colors['pawns'][i] = askcolor(title=f"Joueur {i + 1} : Choisissez votre couleur")[1]
 
         self.__board = [[None for i in range(self.__board_length)] for j in range(self.__board_length)]
         self.__pawns = [None, None]
         self.__shapes = [None, None]
-        self.__player_names = [None, None]
         self.__round = 1
         self.__current_player = 0
 
@@ -116,20 +142,6 @@ class Game():
         self.__canvas.bind("<Button-1>", self.handle_click)
         self.__canvas.pack()
 
-        self.__colors={
-                "pawns": ["red","blue"],
-                "interface": {
-                    "light": {
-                        "background": "#FFFFFF",
-                        "foreground": "#000000"
-                    },
-                    "dark": {
-                        "background": "#222222",
-                        "foreground": "#FFFFFF"
-                    }
-                }
-        }
-
         for i in range(self.__board_length+1):
             self.__canvas.create_line(25+i*50,25,25+i*50,25+50*self.__board_length)
             self.__canvas.create_line(25,25+i*50,25+50*self.__board_length,25+i*50)
@@ -140,7 +152,7 @@ class Game():
         self.__round_text.pack()
 
         self.__player_var = StringVar()
-        self.__player_var.set("Joueur 1")
+        self.__player_var.set(self.__player_names[self.__current_player]) if self.__player_names[self.__current_player] else self.__player_var.set("Joueur 1")
         self.__player_text=Label(self.__root, textvariable=self.__player_var, font=('Helvetica', 20), pady=12)
         self.__player_text.pack()
     
@@ -161,6 +173,7 @@ class Game():
         
         settings['use_default_settings'] = True if settings['use_default_settings'] == "yes" else False
         settings['use_custom_colors'] = True if settings['use_custom_colors'] == "yes" else False
+        settings['use_custom_names'] = True if settings['use_custom_names'] == "yes" else False
         
         return settings
 
@@ -181,7 +194,7 @@ class Game():
 
     def switch_player(self):
         self.__current_player = (self.__current_player + 1) %2
-        self.__player_var.set(f"Joueur {self.__current_player + 1}")
+        self.__player_var.set(self.__player_names[self.__current_player]) if self.__player_names[self.__current_player] else self.__player_var.set(f"Joueur {self.__current_player + 1}")
 
     def get_square(self,x,y):
         square_x = (x-25)//50
@@ -279,13 +292,15 @@ class Game():
 
         if length >= self.__win_length:
             self.switch_player()
-            self.victory(f"{self.__win_length} marques ont été alignées par le joueur {player + 1}.")
+            player_name = self.__player_names[player] if self.__player_names[player] else player + 1
+            self.victory(f"{self.__win_length} marques ont été alignées par le joueur {player_name}.")
         
         if eval(conditions[direction]):
             self.check_length(new_coordinates[direction], player, length + 1, direction)
 
     def victory(self, reason):
-        showinfo("Victoire !",f"Le joueur {self.__current_player + 1} a gagné la partie !\n{reason}")
+        player = self.__player_names[self.__current_player] if self.__player_names[self.__current_player] else self.__current_player + 1
+        showinfo("Victoire !",f"Le joueur {player} a gagné la partie !\n{reason}")
         exit()
     
     def clear_interface(self):
@@ -398,9 +413,7 @@ class Game():
 
         while not valid_move:
             selected_destination = destinations[randint(0,7)]
-            print(selected_destination)
             valid_move = pawn.can_move_to(selected_destination, self.__board, self.__board_length)
-            print(valid_move)
 
         pawn.move(selected_destination, self.__board, self.__canvas, self.__shapes, self.__colors)
         self.__round += 1
