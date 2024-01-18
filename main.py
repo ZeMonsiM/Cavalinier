@@ -92,7 +92,7 @@ class Game():
         
         self.__multiplayer = askyesno("Jeu","Voulez vous jouer en multijoueur ?")
 
-        self.__player_names = [None, None]
+        self.__player_names = [None, None if self.__multiplayer else "IA"]
         if use_custom_names:
             players = 2 if self.__multiplayer else 1
             for i in range(players):
@@ -352,7 +352,7 @@ class Game():
         self.__win_length = json_string['win_length']
         self.__current_player = json_string['current_player']
         self.__round = json_string['round']
-        self.__player_var.set(f"Joueur {self.__current_player + 1}")
+        self.__round_var.set(f"Round {self.__round}")
 
         self.clear_interface()
         self.__canvas.config(width=50*self.__board_length+50, height=50*self.__board_length+50)
@@ -364,6 +364,8 @@ class Game():
             self.__player_names[player] = json_string['players'][player]['name']
             self.__pawns[player] = Pawn((json_string['players'][player]['x'], json_string['players'][player]['y']), player)
             self.__shapes[player] = self.__canvas.create_oval(json_string['players'][player]['x']*50+30,json_string['players'][player]['y']*50+30,json_string['players'][player]['x']*50+70,json_string['players'][player]['y']*50+70, fill=self.__colors["pawns"][player], width=0)
+
+        self.__player_var.set(self.__player_names[self.__current_player]) if self.__player_names[self.__current_player] else self.__player_var.set(f"Joueur {self.__current_player + 1}")
 
         # Redessiner le plateau depuis la sauvegarde
         for y in range(self.__board_length):
@@ -416,6 +418,7 @@ class Game():
         if other_pawn.is_stuck(self.__board, self.__board_length):
             self.switch_player()
             self.victory("Le joueur adverse est bloqué")
+        self.check_board_for_alignment()
 
     def run(self):
         self.__root.mainloop()
