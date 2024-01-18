@@ -1,4 +1,0 @@
-use_default_settings=yes
-theme=light
-use_custom_colors=yes
-use_custom_names=yes
