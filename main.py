@@ -79,21 +79,16 @@ class Pawn():
 class Game():
     def __init__(self):
         settings = self.load_settings()
-        use_default_values = settings['use_default_settings']
         use_custom_colors = settings['use_custom_colors']
         use_custom_names = settings['use_custom_names']
         self.__ui_theme = settings['theme']
 
-        if not use_default_values:
-            self.__board_length = askinteger("Jeu","Quelle est la taille du plateau (entre 8 et 12) ?")
-            self.__win_length = askinteger("Jeu","Nombre de marques à aligner pour gagner (entre 4 et 6) ?")
-            
-            if not self.parameters_are_valid(self.__board_length, self.__win_length):
-                showerror("Erreur","Les paramètres de jeu sont incorrects ! Veuillez vérifier que la taille du plateau et que la condition de victoire soient bien configurées et réessayez.")
-                exit()
-        else:
-            self.__board_length = 10
-            self.__win_length = 5
+        self.__board_length = askinteger("Jeu","Quelle est la taille du plateau (entre 8 et 12) ?")
+        self.__win_length = askinteger("Jeu","Nombre de marques à aligner pour gagner (entre 4 et 6) ?")
+        
+        if not self.parameters_are_valid(self.__board_length, self.__win_length):
+            showerror("Erreur","Les paramètres de jeu sont incorrects ! Veuillez vérifier que la taille du plateau et que la condition de victoire soient bien configurées et réessayez.")
+            exit()
         
         self.__multiplayer = askyesno("Jeu","Voulez vous jouer en multijoueur ?")
 
