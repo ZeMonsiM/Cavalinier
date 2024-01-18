@@ -134,6 +134,11 @@ class Game():
             self.__canvas.create_line(25+i*50,25,25+i*50,25+50*self.__board_length)
             self.__canvas.create_line(25,25+i*50,25+50*self.__board_length,25+i*50)
 
+        self.__round_var = StringVar()
+        self.__round_var.set("Round "+str(self.__round))
+        self.__round_text=Label(self.__root, textvariable=self.__round_var, font=('Helvetica', 15))
+        self.__round_text.pack()
+
         self.__player_var = StringVar()
         self.__player_var.set("Joueur 1")
         self.__player_text=Label(self.__root, textvariable=self.__player_var, font=('Helvetica', 20), pady=12)
@@ -199,6 +204,7 @@ class Game():
             shape=self.__canvas.create_oval(coordinates["x"]*50+30,coordinates["y"]*50+30,coordinates["x"]*50+70,coordinates["y"]*50+70, fill=self.__colors["pawns"][self.__current_player], width=0)
             self.__shapes[self.__current_player] = shape
             self.__round += 1
+            self.__round_var.set("Round "+str(self.__round))
             self.switch_player()
             if not self.__multiplayer:
                 self.play_ai()
@@ -210,6 +216,7 @@ class Game():
             if pawn.can_move_to((coordinates["x"], coordinates["y"]), self.__board, self.__board_length):
                 pawn.move((coordinates["x"], coordinates["y"]), self.__board, self.__canvas, self.__shapes, self.__colors)
                 self.__round += 1
+                self.__round_var.set("Round "+str(self.__round))
                 self.switch_player()
                 other_pawn = self.__pawns[self.__current_player] # Joueur modifié par switch_player, le pion adverse est donc sélectionné
                 if other_pawn.is_stuck(self.__board, self.__board_length):
@@ -371,6 +378,7 @@ class Game():
             shape=self.__canvas.create_oval(x*50+30,y*50+30,x*50+70,y*50+70, fill=self.__colors["pawns"][self.__current_player], width=0)
             self.__shapes[self.__current_player] = shape
             self.__round += 1
+            self.__round_var.set("Round "+str(self.__round))
             self.switch_player()
             return
 
@@ -396,6 +404,7 @@ class Game():
 
         pawn.move(selected_destination, self.__board, self.__canvas, self.__shapes, self.__colors)
         self.__round += 1
+        self.__round_var.set("Round "+str(self.__round))
         self.switch_player()
 
     def run(self):
