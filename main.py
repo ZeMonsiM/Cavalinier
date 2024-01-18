@@ -159,7 +159,7 @@ class Game():
     def load_settings(self):
         if not exists('options.json'):
             showinfo("Jeu","Le fichier 'options.json' est introuvable. Création du fichier avec les paramètres par défaut...")
-            with open('options.txt','w') as settings_file:
+            with open('options.json','w') as settings_file:
                 settings = {
                     "use_default_settings": True,
                     "theme": "light",
