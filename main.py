@@ -87,16 +87,16 @@ class Game():
         if not use_default_values:
             self.__board_length = askinteger("Jeu","Quelle est la taille du plateau (entre 8 et 12) ?")
             self.__win_length = askinteger("Jeu","Nombre de marques à aligner pour gagner (entre 4 et 6) ?")
-            self.__multiplayer = askyesno("Jeu","Voulez vous jouer en multijoueur ?")
-
+            
             if not self.parameters_are_valid(self.__board_length, self.__win_length):
                 showerror("Erreur","Les paramètres de jeu sont incorrects ! Veuillez vérifier que la taille du plateau et que la condition de victoire soient bien configurées et réessayez.")
                 exit()
         else:
             self.__board_length = 10
             self.__win_length = 5
-            self.__multiplayer = True
         
+        self.__multiplayer = askyesno("Jeu","Voulez vous jouer en multijoueur ?")
+
         self.__player_names = [None, None]
         if use_custom_names:
             players = 2 if self.__multiplayer else 1
