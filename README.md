@@ -15,8 +15,6 @@ Si vous n'avez pas Git sur votre machine, vous pouvez télécharger les fichiers
     <li><a href="#class_game">La classe Game</a></li>
     <li><a href="#save_load_feature">Sauvegarde</a></li>
     <li><a href="#settings_guide">Guide de paramétrage</a></li>
-    <li><a href="#default_settings">Paramètres par défaut</a></li>
-    <li><a href="#color_themes">Thèmes de l'interface</a></li>
 </ul>
 
 ---
@@ -105,31 +103,7 @@ La sauvegarde est enregistrée sous la forme suivante :
 <div id="settings_guide"></div>
 
 ### Comment paramétrer le jeu ?
-> Le jeu dispose de plusieurs paramètres, dont les paramètres par défaut et le thème de l'interface. Ces paramètres sont passés dans la classe Game lors de son initialisation. Voici la liste des paramètres :
-```
-Game(<paramètres par défaut>, <thème de l'interface>)
-```
-
-Par exemple, si l'utilisateur souhaite utiliser les paramètres par défaut pour ne pas avoir à entrer les valeurs manuellement, il peut modifier le code de cette façon :
-```python
-game=Game(True)
-```
-Si l'utilisateur veut utiliser un thème sombre sans utiliser les paramètres par défaut, il peut utiliser ce code :
-```python
-game=Game(False, "dark")
-```
-> A terme, un fichier `options.txt` est prévu pour y entrer les paramètres de jeu sans avoir à modifier le code du jeu. Cette mise à jour est prévue pour plus tard...
-
----
-
-<div id="default_settings"></div>
-
-### Paramètres par défaut
-> Une partie peut être forcée avec les paramètres par défaut en spécifiant `True` lors de la création de l'instance de Game. Une grille de 10x10 sera alors utilisée et 5 marques devront être alignées pour déclencher la victoire par alignement.
-
----
-
-<div id="color_themes"></div>
-
-### Thèmes de l'interface
-> L'interface du jeu est disponible sous deux thèmes de couleurs : un mode clair et un mode foncé. Par défaut, le mode clair est sélectionné, mais l'utilisateur peut spécifier dans le deuxième argument de la classe Game le thème qu'il souhaite utiliser pour l'interface
+> Le jeu utilise un fichier de configuration au format JSON pour enregistrer les options du jeu. Pour modifier les options, il suffit d'éditer les valeurs à l'intérieur du fichier `options.json`. Les valeurs modifiables sont :
+- theme: thème de l'interface utilisateur ("light" (par défaut)/"dark")
+- use_custom_colors: activer la sélection de couleurs personnalisées pour les joueurs (true/false)
+- use_custom_names: activer l'utilisation de pseudos custom par les joueurs (true/false)
