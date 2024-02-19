@@ -1,5 +1,5 @@
-# 1ALGO
- Projet Python pour le chapitre de 1ALGO. Jeu de stratégie sur un plateau avec Python et Tkinter, incluant un système de sauvegardes.
+# Cavalinier
+ Jeu de stratégie sur un plateau avec Python et Tkinter, incluant un système de sauvegardes.
 
 ## Installation
 ### Clonage des fichiers du jeu depuis Github
