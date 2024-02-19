@@ -5,7 +5,7 @@
 ### Clonage des fichiers du jeu depuis Github
 Pour télécharger le code source du jeu et y jouer, vous devez tout d'abord cloner le répertoire Github. Si vous avez Git installé sur votre machine, ouvrez le terminal de votre ordinateur et tapez cette commande :
 ```
-git clone https://github.com/ZeMonsiM/1ALGO.git
+git clone https://github.com/ZeMonsiM/Cavalinier.git
 ```
 Si vous n'avez pas Git sur votre machine, vous pouvez télécharger les fichiers depuis la release disponible sur le répertoire Github.
 
