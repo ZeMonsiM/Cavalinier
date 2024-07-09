@@ -83,20 +83,20 @@ class Game():
         use_custom_names = settings['use_custom_names']
         self.__ui_theme = settings['theme']
 
-        self.__board_length = askinteger("Jeu","Quelle est la taille du plateau (entre 8 et 12) ?")
-        self.__win_length = askinteger("Jeu","Nombre de marques à aligner pour gagner (entre 4 et 6) ?")
+        self.__board_length = askinteger("Cavalinier","Quelle est la taille du plateau (entre 8 et 12) ?")
+        self.__win_length = askinteger("Cavalinier","Nombre de marques à aligner pour gagner (entre 4 et 6) ?")
         
         if not self.parameters_are_valid(self.__board_length, self.__win_length):
             showerror("Erreur","Les paramètres de jeu sont incorrects ! Veuillez vérifier que la taille du plateau et que la condition de victoire soient bien configurées et réessayez.")
             exit()
         
-        self.__multiplayer = askyesno("Jeu","Voulez vous jouer en multijoueur ?")
+        self.__multiplayer = askyesno("Cavalinier","Voulez vous jouer en multijoueur ?")
 
         self.__player_names = [None, None if self.__multiplayer else "IA"]
         if use_custom_names:
             players = 2 if self.__multiplayer else 1
             for i in range(players):
-                self.__player_names[i] = askstring("Jeu",f"Joueur {i + 1} : Entrez votre pseudo...")
+                self.__player_names[i] = askstring("Cavalinier",f"Joueur {i + 1} : Entrez votre pseudo...")
 
         self.__colors={
                 "pawns": ["red","blue"],
@@ -124,7 +124,7 @@ class Game():
 
         self.__root=Tk()
         self.__root.resizable(False, False)
-        self.__root.title("Jeu")
+        self.__root.title("Cavalinier")
 
         menu = Menu(self.__root)
         self.__root.config(menu=menu)
@@ -153,7 +153,7 @@ class Game():
     
     def load_settings(self):
         if not exists('options.json'):
-            showinfo("Jeu","Le fichier 'options.json' est introuvable. Création du fichier avec les paramètres par défaut...")
+            showinfo("Cavalinier","Le fichier 'options.json' est introuvable. Création du fichier avec les paramètres par défaut...")
             with open('options.json','w') as settings_file:
                 settings = {
                     "use_default_settings": True,
