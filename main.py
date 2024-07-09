@@ -131,7 +131,7 @@ class Game():
         menu.add_command(label="Réinitialiser", command=self.reset)
         menu.add_command(label="Sauvegarder", command=self.save_game)
         menu.add_command(label="Charger", command=self.load_game)
-        menu.add_command(label="Quitter", command=exit)
+        menu.add_command(label="Quitter", command=self.quit)
         
         self.__canvas=Canvas(self.__root, width=50*self.__board_length+50, height=50*self.__board_length+50,background=self.__colors["interface"][self.__ui_theme]["background"])
         self.__canvas.bind("<Button-1>", self.handle_click)
@@ -422,6 +422,9 @@ class Game():
 
     def run(self):
         self.__root.mainloop()
+
+    def quit(self):
+        self.__root.destroy()
 
 game=Game()
 game.run()
