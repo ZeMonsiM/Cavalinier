@@ -70,6 +70,7 @@ __Fonctions et procédures :__
 - load_game() -> procédure qui charge les informations de la partie sauvegardée dans `save.json`.
 - play_ai() -> procédure qui joue une manche par l'ordinateur dans le mode solo.
 - run() -> procédure chargée de lancer le jeu.
+- quit() -> procédure appelée lorsque le joueur clique sur la commande "Quitter"
 
 ---
 
