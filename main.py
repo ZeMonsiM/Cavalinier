@@ -294,7 +294,7 @@ class Game():
     def victory(self, reason):
         player = self.__player_names[self.__current_player] if self.__player_names[self.__current_player] else self.__current_player + 1
         showinfo("Victoire !",f"Le joueur {player} a gagné la partie !\n{reason}")
-        exit()
+        self.quit()
     
     def clear_interface(self):
         self.__canvas.delete('all')
